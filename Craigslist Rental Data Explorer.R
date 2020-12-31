@@ -170,6 +170,14 @@ p + geom_point(aes(x=data.longitude, y = data.latitude, color = roomprice),
                           bedrooms > 2), size=5, alpha = .5) + 
   scale_color_gradient(low="green", high = "red")
 
+#Save listings as seen to filter out in the future
+
+seenlistings1 <- as_tibble(craigslist$links)
+seenlistings2 <- read_csv("craigslistfilter.csv")
+craigslist <- craigslist %>% filter(!links %in% seenlistings2$value)
+seenlistings3 <- union(seenlistings1, seenlistings2)
+write_excel_csv(seenlistings3,"craigslistfilter.csv")
+
+
 #Save/download CSV file
-write_excel_csv(craigslist,"rentaldata122220.csv")
 write_excel_csv(craigslist, paste0("rentaldata"," (",format(Sys.time(), "%b-%d-%Y"),")", ".csv"))
