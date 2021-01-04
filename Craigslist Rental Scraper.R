@@ -1,5 +1,4 @@
-library(tidyverse)
-library(rvest)
+pacman::p_load(tidyverse, rvest)
 
 #oakland <- read_html("https://sfbay.craigslist.org/search/apa?search_distance=15&postal=94706&min_price=1500&max_price=3000&min_bedrooms=2&availabilityMode=0&sale_date=all+dates")
 #oaklandnodes <- html_nodes(oakland, ".hdrlnk")
@@ -38,6 +37,8 @@ queries <- c(queries, paste0("min_price=", min_price))
 queries <- c(queries, paste0("max_price=", max_price))
 queries <- c(queries, paste0("min_bedrooms=", min_bed))
 queries <- c(queries, paste0("availabilityMode=", availabilityMode))
+queries <- c(queries, paste0("laundry=1&laundry=4&laundry=2&laundry=3")) #all but no laundry selections
+queries <- c(queries, paste0("parking=1&parking=2&parking=3&parking=4")) #selections for available parking
 queries <- c(queries, paste0("sale_date=", sale_dates))
 query_url <- paste0(baseurl,queries[1], paste(queries[2:length(queries)], collapse = "&"))
 
