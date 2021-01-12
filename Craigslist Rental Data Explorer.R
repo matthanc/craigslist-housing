@@ -155,23 +155,7 @@ min(craigslist$sqftprice, na.rm = TRUE)
 
 min(craigslist$prices, na.rm = TRUE)
 
-
-# 1 Bedroom By Price
-
-register_google(key = Sys.getenv("MY_API"))
-
-eby <- c(lon = -122.272743, lat = 37.817110)
-map <- get_map(location = eby, zoom = 12, scale = 2, maptype = 'roadmap')
-p <- ggmap(map)
-p + geom_point(aes(x=data.longitude, y = data.latitude, color = roomprice), 
-               data = craigslist %>% 
-                 filter(roomprice < 4000 & 
-                          roomprice > 1500 &
-                          bedrooms > 2), size=5, alpha = .5) + 
-  scale_color_gradient(low="green", high = "red")
-
 #Save listings as seen to filter out in the future
-
 seenlistings1 <- as_tibble(craigslist$links)
 seenlistings2 <- read_csv("craigslistfilter.csv")
 craigslist <- craigslist %>% filter(!links %in% seenlistings2$value)
@@ -179,5 +163,5 @@ seenlistings3 <- union(seenlistings1, seenlistings2)
 write_excel_csv(seenlistings3,"craigslistfilter.csv")
 
 
-#Save/download CSV file
+#Save/download CSV file as today's date
 write_excel_csv(craigslist, paste0("rentaldata"," (",format(Sys.time(), "%b-%d-%Y"),")", ".csv"))

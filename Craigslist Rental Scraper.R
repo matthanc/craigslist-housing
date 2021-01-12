@@ -1,33 +1,21 @@
 pacman::p_load(tidyverse, rvest)
 
-#oakland <- read_html("https://sfbay.craigslist.org/search/apa?search_distance=15&postal=94706&min_price=1500&max_price=3000&min_bedrooms=2&availabilityMode=0&sale_date=all+dates")
-#oaklandnodes <- html_nodes(oakland, ".hdrlnk")
-#oaklandnodes <- html_nodes(oakland, "li.result-row")
+
+# The guide/post that helped put this together can be found here from vishal Chandawarkar - https://medium.com/swlh/exploring-san-francisco-apartments-on-craigslist-with-r-43e5fa38a77b
 
 
-# Vishal Chandawarkar Medium Post
-
-#location <- "sfbay"
-#area <- "eby" #focus on postings in sfc specifically
-#hasPic <- 1 #don't want sketchy postings without pictures
-#min_bed <- 1 #guarantees the posts have some data to scrape
-#min_bath <- 1 #same as above
-#minSqft <- 0 #same as above
-#availabilityMode <- 0 
-#laundry <- 1 #I really want in-unit laundry, so I included this
-
-# Matthan's query
-location <- "sfbay"
-searchfield1 <- "-furnished"
-searchdistance <- 4
-zipcode <- 94703
-min_price <- 1750
-max_price <- 3200
-min_bed <- 2
+# Query items
+location <- "sfbay" # searching SFBay CraigsList
+searchfield1 <- "-furnished" # many postings were showing up as furnished, this query removes any postings that mention furnished places.
+searchdistance <- 4 # limit search to 4 miles around the below zip code
+zipcode <- 94703 # zip code / center of search
+min_price <- 1750 # min price
+max_price <- 3200 # max price
+min_bed <- 2 # min beds
 availabilityMode <- 0
 sale_dates <- "all+dates"
 
-#Constructing Matthan's Query
+#Constructing  Query by concatenating the search items above
 baseurl <- paste0("https://", location, ".craigslist.org/search/apa")
 queries <- c("?")
 queries <- c(queries, paste0("query=", searchfield1))
@@ -41,24 +29,6 @@ queries <- c(queries, paste0("laundry=1&laundry=4&laundry=2&laundry=3")) #all bu
 queries <- c(queries, paste0("parking=1&parking=2&parking=3&parking=4")) #selections for available parking
 queries <- c(queries, paste0("sale_date=", sale_dates))
 query_url <- paste0(baseurl,queries[1], paste(queries[2:length(queries)], collapse = "&"))
-
-
-#https://sfbay.craigslist.org/search/apa?search_distance=8&postal=94607&min_price=1500&max_price=3200&min_bedrooms=2&availabilityMode=0&sale_date=all+dates
-#https://sfbay.craigslist.org/search/eby/apa?hasPic=1&min_bedrooms=1&min_bathrooms=1&minSqft=0&availabilityMode=0&laundry=1
-
-
-# Constructing The Query by Concatenating The Features Above
-#baseurl <- paste0("https://", location, ".craigslist.org/search/", area, "/apa")
-#queries <- c("?")
-#queries <- c(queries, paste0("hasPic=", hasPic))
-#queries <- c(queries, paste0("min_bedrooms=", min_bed))
-#queries <- c(queries, paste0("min_bathrooms=", min_bath))
-#queries <- c(queries, paste0("minSqft=", minSqft))
-#queries <- c(queries, paste0("availabilityMode=", availabilityMode))
-#queries <- c(queries, paste0("laundry=", laundry))
-#query_url <- paste0(baseurl,queries[1], paste(queries[2:length(queries)], collapse = "&"))
-
-query_url
 
 # QUERY CRAIGSLIST
 raw_query <- xml2::read_html(query_url)
